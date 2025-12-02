@@ -12,6 +12,12 @@ Architecture Overview
 
 Setup and Installation
 
+Prerequisites
+
+Build Docker Containers
+
+Environment Variables
+
 API Documentation
 
 Worker Functionality
@@ -19,7 +25,6 @@ Worker Functionality
 How It Works
 
 Testing
-
 
 Introduction
 
@@ -43,7 +48,7 @@ Architecture Overview
 
 The system architecture can be divided into the following main components:
 
-FastAPI API Server:
+1. FastAPI API Server
 
 Exposes an API endpoint for uploading images.
 
@@ -51,19 +56,19 @@ Once an image is uploaded, it is stored in MinIO.
 
 The FastAPI application sends a message to RabbitMQ to trigger the image processing task.
 
-MinIO:
+2. MinIO
 
 A scalable, high-performance object storage that holds the original and processed images.
 
 It is used as a private S3-compatible object storage to store images.
 
-RabbitMQ:
+3. RabbitMQ
 
 Acts as a messaging broker between the FastAPI API and the worker.
 
 Once an image is uploaded to MinIO, the API sends a message to RabbitMQ containing details of the image to be processed.
 
-Worker:
+4. Worker
 
 The worker listens to the RabbitMQ queue, retrieves the image information, processes the image (e.g., compresses it), and stores the processed image back into MinIO.
 
@@ -81,11 +86,11 @@ and here
 
 Python 3.8+: Required for FastAPI and the worker components.
 
-1. Clone the repository
+Clone the Repository
 git clone https://github.com/yourusername/image-processing-queue.git
 cd image-processing-queue
 
-2. Build Docker Containers
+Build Docker Containers
 
 To build and start the application with Docker Compose:
 
@@ -102,7 +107,7 @@ Set up RabbitMQ (for message queuing).
 
 Start the worker service (which processes the image).
 
-3. Environment Variables
+Environment Variables
 
 Ensure you have the following environment variables set in a .env file:
 
@@ -132,12 +137,10 @@ Response:
 400 Bad Request: If there is an error with the image upload.
 
 Example Request using curl:
-
-curl -X 'POST' \
-  'http://localhost:8000/upload-image/' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: multipart/form-data' \
-  -F 'file=@path_to_your_image.jpg'
+curl -X 'POST' 'http://localhost:8000/upload-image/' \
+-H 'accept: application/json' \
+-H 'Content-Type: multipart/form-data' \
+-F 'file=@path_to_your_image.jpg'
 
 Worker Functionality
 
