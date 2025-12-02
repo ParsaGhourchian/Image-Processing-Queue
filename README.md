@@ -170,3 +170,5 @@ Use the /upload-image/ endpoint to upload an image.
 Verify that the processed image is stored in MinIO.
 
 You can also inspect the logs to see the worker's activity.
+
+<img width="1809" height="1006" alt="image" src="https://github.com/user-attachments/assets/6250be59-d585-40d1-9ef9-375306753961" />
