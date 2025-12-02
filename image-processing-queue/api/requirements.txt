@@ -1,0 +1,6 @@
+fastapi
+uvicorn[standard]
+minio
+pika
+Pillow
+python-multipart

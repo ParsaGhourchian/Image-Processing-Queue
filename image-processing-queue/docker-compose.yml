@@ -1,0 +1,75 @@
+version: "3.9"
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"    # اتصال برنامه‌ها
+      - "15672:15672"  # پنل مدیریتی وب
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: pass
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    ports:
+      - "9000:9000"  # API
+      - "9001:9001"  # پنل وب
+    volumes:
+      - minio_data:/data
+
+  api:
+    build: ./api
+    container_name: api
+    depends_on:
+      - rabbitmq
+      - minio
+    environment:
+      # تنظیمات MinIO
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin123
+      MINIO_USE_SSL: "false"
+
+      # تنظیمات RabbitMQ
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: "5672"
+      RABBITMQ_USER: user
+      RABBITMQ_PASS: pass
+      RABBITMQ_QUEUE: image_tasks
+
+      # نام باکت‌ها
+      MINIO_BUCKET_ORIGINAL: original-images
+      MINIO_BUCKET_PROCESSED: processed-images
+    ports:
+      - "8000:8000"
+
+  worker:
+    build: ./worker
+    container_name: worker
+    depends_on:
+      - rabbitmq
+      - minio
+    environment:
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin123
+      MINIO_USE_SSL: "false"
+
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: "5672"
+      RABBITMQ_USER: user
+      RABBITMQ_PASS: pass
+      RABBITMQ_QUEUE: image_tasks
+
+      MINIO_BUCKET_ORIGINAL: original-images
+      MINIO_BUCKET_PROCESSED: processed-images
+
+volumes:
+  minio_data:
