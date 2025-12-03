@@ -1,8 +1,8 @@
-Image Processing Queue with FastAPI, MinIO, RabbitMQ, and Workers
+# Image Processing Queue with FastAPI, MinIO, RabbitMQ, and Workers
 
 This project implements an image processing queue using FastAPI, MinIO, RabbitMQ, and a worker service to reduce the size of images. The process starts by sending an image via FastAPI to MinIO, a high-performance object storage, where the image is stored. RabbitMQ is used to manage the communication and queuing of tasks, and a worker then processes the image to reduce its size before storing the processed image back into MinIO.
 
-Table of Contents
+# Table of Contents
 
 Introduction
 
@@ -26,11 +26,11 @@ How It Works
 
 Testing
 
-Introduction
+# Introduction
 
 This project is designed to demonstrate a fully functional image processing pipeline using various modern tools and technologies. It is a complete solution for processing large images asynchronously while managing storage efficiently. It is ideal for applications that require image manipulation, such as resizing, compression, or format conversion, but without blocking the main application flow.
 
-Technologies
+# Technologies
 
 FastAPI: A modern, fast (high-performance) web framework for building APIs with Python 3.7+ based on standard Python type hints.
 
@@ -44,7 +44,7 @@ Pillow: A Python Imaging Library (PIL) fork used for processing images.
 
 Docker: For containerizing the application and making deployment easier.
 
-Architecture Overview
+# Architecture Overview
 
 The system architecture can be divided into the following main components:
 
@@ -72,7 +72,7 @@ Once an image is uploaded to MinIO, the API sends a message to RabbitMQ containi
 
 The worker listens to the RabbitMQ queue, retrieves the image information, processes the image (e.g., compresses it), and stores the processed image back into MinIO.
 
-Setup and Installation
+# Setup and Installation
 
 Follow these steps to set up the project on your local machine.
 
@@ -107,7 +107,7 @@ Set up RabbitMQ (for message queuing).
 
 Start the worker service (which processes the image).
 
-Environment Variables
+# Environment Variables
 
 Ensure you have the following environment variables set in a .env file:
 
@@ -118,7 +118,7 @@ RABBITMQ_HOST=rabbitmq
 RABBITMQ_PORT=5672
 RABBITMQ_QUEUE=image_queue
 
-API Documentation
+# API Documentation
 
 The FastAPI application exposes the following endpoint:
 
@@ -142,7 +142,7 @@ curl -X 'POST' 'http://localhost:8000/upload-image/' \
 -H 'Content-Type: multipart/form-data' \
 -F 'file=@path_to_your_image.jpg'
 
-Worker Functionality
+# Worker Functionality
 
 The worker is responsible for processing images. Once it receives a message from RabbitMQ containing the image information, it performs the following steps:
 
@@ -162,7 +162,7 @@ Queueing: The FastAPI application sends a message to RabbitMQ with the image det
 
 Processing: The worker listens to the RabbitMQ queue, processes the image (e.g., compressing it), and stores the processed image back into MinIO.
 
-Testing
+# Testing
 
 You can test the entire pipeline by using the API's upload endpoint and verifying that the image is processed correctly.
 
